@@ -16,3 +16,5 @@ libraryDependencies ++= Seq(
   "org.scodec" %% "scodec-core" % "1.7.0",
   "org.specs2" %% "specs2-core" % "2.4.15" % "test"
 )
+
+scalariformSettings
