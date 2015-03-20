@@ -6,6 +6,7 @@ import scodec._
 object MQTTCodec extends Codec[Frame] {
   import ReturnCode._
   import QOS._
+  import SubscriptionReturnCode._
   import scodec.codecs._
   val str = variableSizeBytes(uint16, utf8).as[String]
 
@@ -56,10 +57,29 @@ object MQTTCodec extends Codec[Frame] {
     str ::
     conditional(header.qos.id > 0, uint16) ::
     bytes).as[Publish]
-  def puback = (uint16).as[PubAck]
-  def pubrec = (uint16).as[PubRec]
-  def pubrel = (uint16).as[PubRel]
-  def pubcomp = (uint16).as[PubComp]
+  val puback = (uint16).as[PubAck]
+  val pubrec = (uint16).as[PubRec]
+  val pubrel = (uint16).as[PubRel]
+  val pubcomp = (uint16).as[PubComp]
+
+  val topicSubscription = (
+    str ::
+    ignore(6) ::
+    qos).dropUnits.as[TopicSubscription]
+
+  val subscribe = (
+    uint16 ::
+    list(topicSubscription)).as[Subscribe]
+
+  val subscriptionReturnCode = mappedEnum(uint8,
+    OK_QOS0 -> 0x01,
+    OK_QOS1 -> 0x02,
+    OK_QOS2 -> 0x03,
+    FAILURE -> 0x80)
+
+  val suback = (
+    uint16 ::
+    list(subscriptionReturnCode)).as[SubAck]
 
   def payloadCodec(header: Header) = discriminated[MQTTMessage].by(provide(header.messageType))
     .typecase(1, connect)
@@ -69,6 +89,8 @@ object MQTTCodec extends Codec[Frame] {
     .typecase(5, pubrec)
     .typecase(6, pubrel)
     .typecase(7, pubcomp)
+    .typecase(8, subscribe)
+    .typecase(9, suback)
 
   def encode(m: Frame) = frame.encode(m)
   def decode(m: BitVector) = frame.decode(m)

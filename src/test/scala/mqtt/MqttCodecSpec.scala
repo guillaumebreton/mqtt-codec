@@ -6,6 +6,7 @@ import scodec.bits._
 class MQTTCodecSpec extends WordSpec with MustMatchers {
   import ReturnCode._
   import QOS._
+  import SubscriptionReturnCode._
 
   "encode/decode" should {
     "encode/decode connect" in {
@@ -74,6 +75,21 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
       val pubcomp = PubComp(1)
       val value = "72020001"
       roundtrip(value, Frame(header, pubcomp))
+    }
+    "encode/decode subscribe" in {
+      val header = Header(8, false, AT_MOST_ONCE, false)
+      val subscribe = Subscribe(1, List(TopicSubscription("t", AT_MOST_ONCE), TopicSubscription("u", EXACTLY_ONCE)))
+      val value = "820A00010001740100017503"
+      roundtrip(value, Frame(header, subscribe))
+
+    }
+
+    "encode/decode suback" in {
+      val header = Header(9, false, NONE, false)
+      val suback = SubAck(1, List(OK_QOS0, OK_QOS1, OK_QOS2, FAILURE))
+      val value = "9006000101020380"
+      roundtrip(value, Frame(header, suback))
+
     }
   }
 

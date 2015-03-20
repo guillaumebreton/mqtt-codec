@@ -35,11 +35,11 @@ case class PubRel(id: Int) extends MQTTMessage
 case class PubRec(id: Int) extends MQTTMessage
 case class PubComp(id: Int) extends MQTTMessage
 case class TopicSubscription(topic: String, qos: QOS)
-case class Subscribe(id: Int, subscription: List[TopicSubscription])
-case class SubAck(id: Int, returnCodes: List[SubscriptionReturnCode])
-case class Unsubscribe(id: Int, topics: List[String])
-case class UnsubAck(id: Int)
-case object PingReq
-case object PingResp
-case object Disconnect
+case class Subscribe(id: Int, subscription: List[TopicSubscription]) extends MQTTMessage
+case class SubAck(id: Int, returnCodes: List[SubscriptionReturnCode]) extends MQTTMessage
+case class Unsubscribe(id: Int, topics: List[String]) extends MQTTMessage
+case class UnsubAck(id: Int) extends MQTTMessage
+case object PingReq extends MQTTMessage
+case object PingResp extends MQTTMessage
+case object Disconnect extends MQTTMessage
 
