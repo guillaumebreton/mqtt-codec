@@ -11,14 +11,14 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
   "encode/decode" should {
     "encode/decode connect" in {
 
-      val header = Header(1, false, NONE, false)
+      val header = Header(1, false, QOS0, false)
 
       val connectHeader = ConnectHeader(
         4,
         true,
         true,
         true,
-        AT_MOST_ONCE,
+        QOS1,
         true,
         true,
         5)
@@ -35,21 +35,21 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
     }
 
     "encode/decode connack" in {
-      val header = Header(2, false, NONE, false)
+      val header = Header(2, false, QOS0, false)
       val connack = Connack(true, CONNECTION_ACCEPTED)
       val value = "20020101"
       roundtrip(value, Frame(header, connack))
 
     }
     "encode/decode publish" in {
-      val header = Header(3, false, AT_MOST_ONCE, false)
+      val header = Header(3, false, QOS1, false)
       val publish = Publish("t", Some(1), hex"020202")
       val value = "32080001740001020202"
       roundtrip(value, Frame(header, publish))
 
     }
     "encode/decode puback" in {
-      val header = Header(4, false, AT_MOST_ONCE, false)
+      val header = Header(4, false, QOS1, false)
       val puback = PubAck(1)
       val value = "42020001"
       roundtrip(value, Frame(header, puback))
@@ -57,35 +57,35 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
     }
     "encode/decode pubrec" in {
 
-      val header = Header(5, false, AT_MOST_ONCE, false)
+      val header = Header(5, false, QOS1, false)
       val pubrec = PubRec(1)
       val value = "52020001"
       roundtrip(value, Frame(header, pubrec))
     }
     "encode/decode pubrel" in {
 
-      val header = Header(6, false, AT_MOST_ONCE, false)
+      val header = Header(6, false, QOS1, false)
       val pubrel = PubRel(1)
       val value = "62020001"
       roundtrip(value, Frame(header, pubrel))
     }
     "encode/decode pubcomp" in {
 
-      val header = Header(7, false, AT_MOST_ONCE, false)
+      val header = Header(7, false, QOS1, false)
       val pubcomp = PubComp(1)
       val value = "72020001"
       roundtrip(value, Frame(header, pubcomp))
     }
     "encode/decode subscribe" in {
-      val header = Header(8, false, AT_MOST_ONCE, false)
-      val subscribe = Subscribe(1, List(TopicSubscription("t", AT_MOST_ONCE), TopicSubscription("u", EXACTLY_ONCE)))
-      val value = "820A00010001740100017503"
+      val header = Header(8, false, QOS1, false)
+      val subscribe = Subscribe(1, List(TopicSubscription("t", QOS1), TopicSubscription("u", QOS2)))
+      val value = "820A00010001740100017502"
       roundtrip(value, Frame(header, subscribe))
 
     }
 
     "encode/decode suback" in {
-      val header = Header(9, false, NONE, false)
+      val header = Header(9, false, QOS0, false)
       val suback = SubAck(1, List(OK_QOS0, OK_QOS1, OK_QOS2, FAILURE))
       val value = "9006000101020380"
       roundtrip(value, Frame(header, suback))

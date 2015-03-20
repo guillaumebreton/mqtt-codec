@@ -11,10 +11,9 @@ object MQTTCodec extends Codec[Frame] {
   val str = variableSizeBytes(uint16, utf8).as[String]
 
   val qos = mappedEnum(uint(2),
-    NONE -> 0x00,
-    AT_MOST_ONCE -> 0x01,
-    AT_LEAST_ONCE -> 0x02,
-    EXACTLY_ONCE -> 0x03)
+    QOS0 -> 0x00,
+    QOS1 -> 0x01,
+    QOS2 -> 0x02)
 
   val connectHeader = (
     constant(hex"00044D515454") ::
