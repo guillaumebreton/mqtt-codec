@@ -1,23 +1,21 @@
 package mqtt
 
 import scodec.bits._
-import scodec.codecs._
 import scodec._
 
-object MQTTCodec extends Codec[MQTTMessage] {
+object MQTTCodec extends Codec[Frame] {
   import ReturnCode._
   import QOS._
+  import scodec.codecs._
   val str = variableSizeBytes(uint16, utf8).as[String]
 
   val qos = mappedEnum(uint(2),
+    NONE -> 0x00,
     AT_MOST_ONCE -> 0x01,
     AT_LEAST_ONCE -> 0x02,
-    EXACTLY_ONCE -> 0x03
-  )
+    EXACTLY_ONCE -> 0x03)
 
   val connectHeader = (
-    ignore(4) ::
-    uint8 ::
     constant(hex"00044D515454") ::
     uint8 ::
     bool ::
@@ -27,16 +25,14 @@ object MQTTCodec extends Codec[MQTTMessage] {
     bool ::
     bool ::
     ignore(1) ::
-    uint16
-  ).dropUnits.as[ConnectHeader]
+    uint16).dropUnits.as[ConnectHeader]
 
-  val connect = connectHeader.flatPrepend(header =>
+  val connect = connectHeader.flatPrepend(header ⇒
     str ::
       conditional(header.willFlag, str) ::
       conditional(header.willFlag, listOfN(uint16, byte)) ::
       conditional(header.usernameFlag, str) ::
-      conditional(header.passwordFlag, str)
-  ).as[Connect]
+      conditional(header.passwordFlag, str)).as[Connect]
 
   val returnCode = mappedEnum(uint8,
     CONNECTION_ACCEPTED -> 1,
@@ -44,22 +40,38 @@ object MQTTCodec extends Codec[MQTTMessage] {
     IDENTIFIER_REJECTED -> 3,
     SERVER_UNAVAILABLE -> 4,
     BAD_AUTHENTICATION -> 5,
-    NOT_AUTHORIZED -> 6
-  )
+    NOT_AUTHORIZED -> 6)
+
   val connack = (
-    ignore(4) ::
-    constant(hex"02") ::
     ignore(7) ::
     bool(1) ::
-    returnCode
-  ).dropUnits.as[Connack]
+    returnCode).dropUnits.as[Connack]
 
-  val codec = discriminated[MQTTMessage].by(uint(4))
+  val header = (uint(4) :: bool :: qos :: bool).as[Header]
+
+  val frame = header.flatPrepend((header: Header) ⇒
+    variableSizeBytes(varint, payloadCodec(header)).hlist).as[Frame]
+
+  def publish(header: Header): Codec[Publish] = (
+    str ::
+    conditional(header.qos.id > 0, uint16) ::
+    bytes).as[Publish]
+  def puback = (uint16).as[PubAck]
+  def pubrec = (uint16).as[PubRec]
+  def pubrel = (uint16).as[PubRel]
+  def pubcomp = (uint16).as[PubComp]
+
+  def payloadCodec(header: Header) = discriminated[MQTTMessage].by(provide(header.messageType))
     .typecase(1, connect)
     .typecase(2, connack)
+    .typecase(3, publish(header))
+    .typecase(4, puback)
+    .typecase(5, pubrec)
+    .typecase(6, pubrel)
+    .typecase(7, pubcomp)
 
-  def encode(m: MQTTMessage) = codec.encode(m)
-  def decode(m: BitVector) = codec.decode(m)
+  def encode(m: Frame) = frame.encode(m)
+  def decode(m: BitVector) = frame.decode(m)
 
   override def sizeBound = SizeBound.unknown
 }

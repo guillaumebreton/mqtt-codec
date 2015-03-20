@@ -7,8 +7,10 @@ import scodec.bits._
 
 sealed trait MQTTMessage
 
+case class Header(messageType: Int, dup: Boolean, qos: QOS, retain: Boolean)
+case class Frame(header: Header, payload: MQTTMessage)
+
 case class ConnectHeader(
-  length: Int,
   protocolLevel: Int,
   usernameFlag: Boolean,
   passwordFlag: Boolean,
@@ -26,10 +28,12 @@ case class Connect(
   username: Option[String],
   password: Option[String]) extends MQTTMessage
 case class Connack(sessionPresent: Boolean, returnCode: ReturnCode) extends MQTTMessage
-case class Publish(id: Option[Int], topic: String, payload: ByteVector, dup: Boolean, qos: QOS, retain: Boolean)
-case class PubAck(id: Int)
-case class PubRec(id: Int)
-case class PubComp(id: Int)
+case class Publish(topic: String, id: Option[Int], payload: ByteVector) extends MQTTMessage
+
+case class PubAck(id: Int) extends MQTTMessage
+case class PubRel(id: Int) extends MQTTMessage
+case class PubRec(id: Int) extends MQTTMessage
+case class PubComp(id: Int) extends MQTTMessage
 case class TopicSubscription(topic: String, qos: QOS)
 case class Subscribe(id: Int, subscription: List[TopicSubscription])
 case class SubAck(id: Int, returnCodes: List[SubscriptionReturnCode])

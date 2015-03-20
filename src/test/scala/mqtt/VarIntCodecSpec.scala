@@ -29,7 +29,7 @@ class VarIntCodecSpec extends WordSpec with MustMatchers {
     }
   }
 
-  private[this] def roundtrip(hexValue: String, value: Int) {
+  private[this] def roundtrip(hexValue: String, value: Int): Unit = {
 
     val vector = BitVector.fromHex(hexValue).get
     val result = varint.decode(vector)

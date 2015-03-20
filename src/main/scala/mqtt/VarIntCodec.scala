@@ -1,7 +1,6 @@
 package mqtt
 
 import scodec.bits._
-import scodec.codecs._
 import scodec._
 
 // see http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html#_Toc398718023
