@@ -16,7 +16,7 @@ object MQTTCodecBuild extends Build{
   lazy val root = Project(
     id = "mqtt-codec",
     base = file("."),
-    settings = buildSettings ++ Formatting.formatSettings ++ Seq(
+    settings = buildSettings ++ Formatting.formatSettings ++ Publish.publishSetting ++ Seq(
       libraryDependencies ++= Dependencies.compile ++ Dependencies.test,
       scalacOptions ++= Seq(
         "-language:implicitConversions",
