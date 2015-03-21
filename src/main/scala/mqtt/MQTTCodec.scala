@@ -85,6 +85,9 @@ object MQTTCodec extends Codec[Frame] {
     list(str)).as[Unsubscribe]
 
   val unsuback = (uint16).as[UnsubAck]
+  val pingreq = provide(PingReq)
+  val pingresp = provide(PingResp)
+  val disconnect = provide(Disconnect)
 
   def payloadCodec(header: Header) = discriminated[MQTTMessage].by(provide(header.messageType))
     .typecase(1, connect)
@@ -98,6 +101,9 @@ object MQTTCodec extends Codec[Frame] {
     .typecase(9, suback)
     .typecase(10, unsubscribe)
     .typecase(11, unsuback)
+    .typecase(12, pingreq)
+    .typecase(13, pingresp)
+    .typecase(14, disconnect)
 
   def encode(m: Frame) = frame.encode(m)
   def decode(m: BitVector) = frame.decode(m)

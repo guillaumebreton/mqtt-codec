@@ -106,6 +106,27 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
       val value = "B0020001"
       roundtrip(value, Frame(header, unsuback))
     }
+
+    "encode/decode pingreq" in {
+      val header = Header(12, false, QOS0, false)
+      val pingreq = PingReq
+      val value = "C000"
+      roundtrip(value, Frame(header, pingreq))
+    }
+    "encode/decode pingresp" in {
+
+      val header = Header(13, false, QOS0, false)
+      val pingresp = PingResp
+      val value = "D000"
+      roundtrip(value, Frame(header, pingresp))
+    }
+    "encode/decode disconnect" in {
+
+      val header = Header(14, false, QOS0, false)
+      val disconnect = Disconnect
+      val value = "E000"
+      roundtrip(value, Frame(header, disconnect))
+    }
   }
 
   private[this] def roundtrip(hexValue: String, value: Frame): Unit = {
