@@ -30,7 +30,7 @@ object MQTTCodec extends Codec[Frame] {
   val connect = connectHeader.flatPrepend(header ⇒
     str ::
       conditional(header.willFlag, str) ::
-      conditional(header.willFlag, listOfN(uint16, byte)) ::
+      conditional(header.willFlag, variableSizeBytes(uint16, bytes)) ::
       conditional(header.usernameFlag, str) ::
       conditional(header.passwordFlag, str)).as[Connect]
 

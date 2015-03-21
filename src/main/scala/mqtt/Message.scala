@@ -24,7 +24,7 @@ case class Connect(
   header: ConnectHeader,
   clientId: String,
   willTopic: Option[String],
-  willMessage: Option[List[Byte]],
+  willMessage: Option[ByteVector],
   username: Option[String],
   password: Option[String]) extends MQTTMessage
 case class Connack(sessionPresent: Boolean, returnCode: ReturnCode) extends MQTTMessage

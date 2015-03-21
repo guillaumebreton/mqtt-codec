@@ -26,7 +26,7 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
         connectHeader,
         "D",
         Some("t"),
-        Some(hex"0202".toSeq.toList),
+        Some(hex"0202"),
         Some("E"),
         Some("F"))
       val value = "101a00044D51545404EE000500014400017400020202000145000146"
