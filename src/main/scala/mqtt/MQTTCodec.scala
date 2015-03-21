@@ -80,6 +80,12 @@ object MQTTCodec extends Codec[Frame] {
     uint16 ::
     list(subscriptionReturnCode)).as[SubAck]
 
+  val unsubscribe = (
+    uint16 ::
+    list(str)).as[Unsubscribe]
+
+  val unsuback = (uint16).as[UnsubAck]
+
   def payloadCodec(header: Header) = discriminated[MQTTMessage].by(provide(header.messageType))
     .typecase(1, connect)
     .typecase(2, connack)
@@ -90,6 +96,8 @@ object MQTTCodec extends Codec[Frame] {
     .typecase(7, pubcomp)
     .typecase(8, subscribe)
     .typecase(9, suback)
+    .typecase(10, unsubscribe)
+    .typecase(11, unsuback)
 
   def encode(m: Frame) = frame.encode(m)
   def decode(m: BitVector) = frame.decode(m)

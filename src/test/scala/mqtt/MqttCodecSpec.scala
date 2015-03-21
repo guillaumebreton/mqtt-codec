@@ -91,6 +91,21 @@ class MQTTCodecSpec extends WordSpec with MustMatchers {
       roundtrip(value, Frame(header, suback))
 
     }
+    "encode/decode unsubscribe" in {
+      val header = Header(10, false, QOS1, false)
+      val unsubscribe = Unsubscribe(1, List("t", "u"))
+      val value = "A2080001000174000175"
+      roundtrip(value, Frame(header, unsubscribe))
+
+    }
+
+    "encode/decode unsuback" in {
+
+      val header = Header(11, false, QOS0, false)
+      val unsuback = UnsubAck(1)
+      val value = "B0020001"
+      roundtrip(value, Frame(header, unsuback))
+    }
   }
 
   private[this] def roundtrip(hexValue: String, value: Frame): Unit = {
