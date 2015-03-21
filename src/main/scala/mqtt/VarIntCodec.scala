@@ -1,4 +1,4 @@
-package mqtt
+package octalmind.mqtt
 
 import scodec.bits._
 import scodec._

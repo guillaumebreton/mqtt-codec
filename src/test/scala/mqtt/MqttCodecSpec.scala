@@ -1,4 +1,4 @@
-package mqtt
+package octalmind.mqtt
 
 import org.scalatest._
 import scodec.bits._

@@ -1,4 +1,4 @@
-package mqtt
+package octalmind.mqtt
 
 import ReturnCode._
 import SubscriptionReturnCode._

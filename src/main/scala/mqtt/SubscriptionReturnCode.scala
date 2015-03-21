@@ -1,4 +1,4 @@
-package mqtt
+package octalmind.mqtt
 
 object SubscriptionReturnCode extends Enumeration {
 
