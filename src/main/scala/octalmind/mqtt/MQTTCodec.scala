@@ -2,7 +2,9 @@ package octalmind.mqtt
 
 import scodec.bits._
 import scodec._
-
+/**
+ * MQTT Codec.
+ */
 object MQTTCodec extends Codec[Frame] {
   import ReturnCode._
   import QOS._
