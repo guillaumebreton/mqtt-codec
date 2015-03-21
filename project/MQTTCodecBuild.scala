@@ -33,8 +33,9 @@ object MQTTCodecBuild extends Build{
         "-Yno-adapted-args",
         "-Ywarn-dead-code",
         "-Ywarn-numeric-widen",
-        "-Ywarn-value-discard",
-        "-Ywarn-unused-import")
+        "-Ywarn-value-discard"
+      )
+
 
     )
   )
