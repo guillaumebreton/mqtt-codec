@@ -14,6 +14,15 @@ All extracted messages are visible in the [Message.scala](https://github.com/gui
 
 The project is under the MIT License. See the LICENSE.md file.
 
+# Dependency
+
+Add the following dependency and the bintray host
+
+'''
+resolvers += "octalmind maven" at "http://dl.bintray.com/guillaumebreton/maven"
+libraryDependencies += "octamind" % "mqtt-codec_2.11" % "1.0"
+'''
+
 # Usage
 
 '''
