@@ -43,5 +43,5 @@ ScalariformKeys.preferences := FormattingPreferences()
 
 // publishMavenStyle := false
 bintrayPublishSettings
-repository in bintray := "scala"
+repository in bintray := "maven"
 bintrayOrganization in bintray := None
