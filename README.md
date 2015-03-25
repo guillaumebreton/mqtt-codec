@@ -18,14 +18,14 @@ The project is under the MIT License. See the LICENSE.md file.
 
 Add the following dependency and the bintray host
 
-'''
+~~~scala
 resolvers += "octalmind maven" at "http://dl.bintray.com/guillaumebreton/maven"
 libraryDependencies += "octamind" % "mqtt-codec_2.11" % "1.1.0"
-'''
+~~~
 
 # Usage
 
-'''
+~~~scala
 import scodec.bits.ByteVector
 import octalmind.mqtt.MykioCodec
 
@@ -34,7 +34,7 @@ val message = hex"32080001740001020202"
 val result = MQTTCodec.decode(message.toBitVector)
 
 //result: scodec.Attempt[scodec.DecodeResult[octalmind.mqtt.Frame]] = Successful(DecodeResult(Frame(Header(3,false,QOS1,false),Publish(t,Some(1),ByteVector(3 bytes, 0x020202))),BitVector(empty)))
-'''
+~~~
 
 
 # Release Nots
