@@ -3,14 +3,14 @@ import bintray.Keys._
 
 name := "mqtt-codec"
 
-version := "1.0"
+version := "1.1.0"
 
 organization := "octalmind"
 
 licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
-scalaVersion := "2.11.4"
+scalaVersion := "2.11.6"
 
-crossScalaVersions := Seq("2.11.4", "2.10.4")
+crossScalaVersions := Seq("2.11.6", "2.10.5")
 
 libraryDependencies ++= Seq(
   "org.scodec" %% "scodec-core" % "1.7.0",
